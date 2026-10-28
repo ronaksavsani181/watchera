@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: watchera-backend
+    name: watchera
     runtime: node
     plan: free
     region: oregon
@@ -16,10 +16,12 @@ services:
         value: 10000
       - key: MONGO_URI
         sync: false
+      - key: DATABASE_URL
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: CLIENT_URL
-        sync: false
+        value: https://watchera-store.vercel.app,http://localhost:4200
       - key: RAZORPAY_KEY_ID
         sync: false
       - key: RAZORPAY_KEY_SECRET

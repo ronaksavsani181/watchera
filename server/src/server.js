@@ -2,8 +2,10 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Import the database connection we just created
+// Import the database connection
 import connectDB from "./config/db.js"; 
 
 // Route Imports
@@ -15,15 +17,24 @@ import cartRoutes from "./routes/cartRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
-// Load environment variables
+// Load environment variables (supports current directory, server directory, and repo root)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 
 const app = express();
 
 /* ==============================
    CORS CONFIGURATION
 ============================== */
-const rawOrigins = process.env.CLIENT_URL || "http://localhost:4200";
+const rawOrigins =
+  process.env.CLIENT_URL ||
+  process.env.FRONTEND_URL ||
+  "https://watchera-store.vercel.app,http://localhost:4200";
+
 const allowedOrigins = rawOrigins
   .split(",")
   .map((origin) => origin.trim().replace(/\/$/, ""))
@@ -31,14 +42,14 @@ const allowedOrigins = rawOrigins
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow non-browser requests (curl, postman, server-to-server)
+    // Allow non-browser requests (curl, postman, server-to-server, Render health checks)
     if (!origin) return callback(null, true);
 
     const isExplicitlyAllowed = allowedOrigins.includes(origin) || allowedOrigins.includes("*");
     const isVercel = /^https:\/\/.*\.vercel\.app$/.test(origin);
-    const isLocalhost = /^http:\/\/localhost(:\d+)?$/.test(origin);
+    const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
 
-    if (isExplicitlyAllowed || isVercel || (process.env.NODE_ENV !== "production" && isLocalhost)) {
+    if (isExplicitlyAllowed || isVercel || isLocalhost) {
       return callback(null, true);
     }
 

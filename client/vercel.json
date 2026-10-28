@@ -5,7 +5,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://watchera-backend.onrender.com/api/:path*"
+      "destination": "https://watchera.onrender.com/api/:path*"
     },
     {
       "source": "/(.*)",

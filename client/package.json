@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "postbuild": "node -e \"const fs=require('fs');const p=require('path');const s=p.join('dist','watchera','browser','index.csr.html');const d=p.join('dist','watchera','browser','index.html');if(fs.existsSync(s)&&!fs.existsSync(d))fs.copyFileSync(s,d);\"",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:watchera": "node dist/watchera/server/server.mjs"

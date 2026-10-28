@@ -23,7 +23,15 @@ export const protect = async (req, res, next) => {
     }
 
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const secret = process.env.JWT_SECRET || (process.env.NODE_ENV !== "production" ? "watchera_dev_secret_key_change_in_production" : "");
+    if (!secret) {
+      return res.status(500).json({
+        success: false,
+        message: "Server authentication misconfigured (missing JWT_SECRET)"
+      });
+    }
+
+    const decoded = jwt.verify(token, secret);
 
     // Find user and exclude the password from the result
     const user = await User.findById(decoded.id).select("-password");

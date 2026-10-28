@@ -78,7 +78,9 @@ export class NavbarComponent {
 
   @HostListener('window:scroll')
   onWindowScroll() {
-    this.isScrolled.set(window.scrollY > 24);
+    if (typeof window !== 'undefined') {
+      this.isScrolled.set(window.scrollY > 24);
+    }
   }
 
   @HostListener('document:keydown.escape')
@@ -107,13 +109,17 @@ export class NavbarComponent {
 
   openSearch() {
     this.searchOpen.set(true);
-    document.body.style.overflow = 'hidden';
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    }
   }
 
   closeSearch() {
     this.searchOpen.set(false);
     this.searchQuery.set('');
-    document.body.style.overflow = '';
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+    }
   }
 
   quickSearch(term: string) {

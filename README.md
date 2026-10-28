@@ -748,6 +748,60 @@ Potential future improvements include:
 
 ---
 
+# 🚀 Production Deployment Guide
+
+WATCHERA is pre-configured and 100% deploy-ready for:
+- **Frontend:** [Vercel](https://vercel.com/)
+- **Backend:** [Render](https://render.com/)
+
+---
+
+### 1. Backend Deployment on Render
+
+1. **Sign in to Render:** Go to [render.com](https://render.com/) and connect your GitHub account.
+2. **Create Web Service:**
+   - Click **New +** → **Web Service** (or use **Blueprint** with the included [`render.yaml`](render.yaml)).
+   - Select your repository: `https://github.com/ronaksavsani181/watchera`.
+3. **Configure Settings:**
+   - **Root Directory:** `server`
+   - **Environment:** `Node`
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+   - **Health Check Path:** `/health`
+4. **Add Environment Variables (in Render Dashboard → Environment):**
+   - `NODE_ENV` = `production`
+   - `PORT` = `10000` (or leave default assigned by Render)
+   - `MONGO_URI` = `mongodb+srv://<user>:<password>@cluster0.mongodb.net/watchera?retryWrites=true&w=majority`
+   - `JWT_SECRET` = `[Random secure 32+ character string]`
+   - `CLIENT_URL` = `https://your-frontend-domain.vercel.app,http://localhost:4200`
+   - `RAZORPAY_KEY_ID` = `[Your Razorpay Key ID]`
+   - `RAZORPAY_KEY_SECRET` = `[Your Razorpay Key Secret]`
+5. **Deploy:** Click **Create Web Service**. Once built, note your backend URL (e.g. `https://watchera-backend.onrender.com`).
+
+---
+
+### 2. Frontend Deployment on Vercel
+
+1. **Sign in to Vercel:** Go to [vercel.com](https://vercel.com/) and connect your GitHub account.
+2. **Import Project:** Click **Add New** → **Project** and select `watchera`.
+3. **Configure Build Settings:**
+   - **Framework Preset:** `Angular`
+   - **Root Directory:** `client` (or leave at root `.` since root `vercel.json` is also provided)
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist/watchera/browser`
+4. **Connect to Render Backend:**
+   - In `client/vercel.json`, update the rewrite destination with your Render URL:
+     ```json
+     {
+       "source": "/api/:path*",
+       "destination": "https://YOUR-RENDER-BACKEND.onrender.com/api/:path*"
+     }
+     ```
+   *(This routes `/api` calls through Vercel's edge network directly to your Render API, eliminating CORS issues entirely!)*
+5. **Deploy:** Click **Deploy**. Your storefront is live with full SPA routing, security headers, and SSR fallbacks!
+
+---
+
 # 👨‍🎓 Academic Project
 
 **Project:** WATCHERA — E-Commerce Website of Watch

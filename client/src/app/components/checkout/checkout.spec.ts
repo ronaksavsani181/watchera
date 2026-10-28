@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 import { CheckoutComponent } from './checkout';
 
 describe('CheckoutComponent', () => {
@@ -8,7 +9,11 @@ describe('CheckoutComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CheckoutComponent]
+      imports: [CheckoutComponent],
+      providers: [
+        provideRouter([]),
+        provideHttpClient()
+      ]
     })
     .compileComponents();
 
